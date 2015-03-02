@@ -11,7 +11,7 @@ namespace vk.Services
 {
     public class PostsService
     {
-        private static VkPostContext db = new VkPostContext();
+        //private static VkPostContext db = new VkPostContext();
         private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
         private static Random random = new Random();
 
@@ -56,12 +56,15 @@ namespace vk.Services
                 var posts = GetPostFromVk(ownerId);
                 if (posts != null)
                 {
-                    foreach (var post in posts)
+                    using (var context = new VkPostContext())
                     {
-                        logger.Info("We got something from id" + ownerId + ": " + post.Text);
-                        db.VkPosts.Add(post);
+                        foreach (var post in posts)
+                        {
+                            //logger.Info("We got something from id" + ownerId + ": " + post.Text);
+                            context.VkPosts.Add(post);
+                        }
+                        context.SaveChanges();
                     }
-                    db.SaveChanges();
                 }
 
                 Thread.Sleep(200);
@@ -72,14 +75,40 @@ namespace vk.Services
         public static VkPost GetRandomPostFromDB()
         {
             //var posts = db.VkPosts.ToList();
-            if (db.VkPosts.Any()) // Есть ли одна или более записей
+            using (var context = new VkPostContext())
             {
-                int randomNumber = random.Next(db.VkPosts.Count()) + 1;
-                return db.VkPosts.Where(p => p.Id == randomNumber).FirstOrDefault();
+                if (context.VkPosts.Any()) // Есть ли одна или более записей
+                {
+                    int randomNumber = random.Next(context.VkPosts.Count()) + 1;
+                    return context.VkPosts.Where(p => p.Id == randomNumber).FirstOrDefault();
+                }
+                else
+                    return null;
             }
-            else
-                return null;
         }
+        public static List<VkPost> GetRandomPostsFromDB()
+        {
+            //var posts = db.VkPosts.ToList();
+            var posts = new List<VkPost>();
+            using (var context = new VkPostContext())
+            {
+                if (context.VkPosts.Any()) // Есть ли одна или более записей
+                {
+                    var count = 10;
+                    if (context.VkPosts.Count() < 10)
+                        count = context.VkPosts.Count();
+
+                    for (int i = 0; i < count; i++)
+                    {
+                        int randomNumber = random.Next(context.VkPosts.Count()) + 1;
+                        posts.Add(context.VkPosts.Where(p => p.Id == randomNumber).FirstOrDefault());
+                    }
+                }
+            }
+            return posts;
+        }
+
+
         private static DateTime UnixTimeStampToDateTime(double unixTimeStamp)
         {
             // Unix timestamp is seconds past epoch
