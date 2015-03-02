@@ -14,14 +14,22 @@ namespace vk
 
     public class MvcApplication : System.Web.HttpApplication
     {
+        private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
         protected void Application_Start()
         {
+            logger.Info("Application_Start");
             AreaRegistration.RegisterAllAreas();
 
             WebApiConfig.Register(GlobalConfiguration.Configuration);
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
+            vk.Services.PostsService.StartFetchingVk();
+
+        }
+        public override void Init()
+        {
+            base.Init();
         }
     }
 }
