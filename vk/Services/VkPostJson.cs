@@ -54,7 +54,6 @@ using System.Web;
 namespace vk.Services
 {
 
-
     public class VkPostJson
     {
         public Response response { get; set; }

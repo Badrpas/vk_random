@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Threading;
+using System.Diagnostics;
 using vk.Models;
 using Newtonsoft.Json;
 
@@ -53,14 +54,14 @@ namespace vk.Services
             {
                 var ownerId = random.Next(222000000);
                 //logger.Info("Fetching vk post (id"+ownerId+")");
-                var posts = GetPostFromVk(ownerId);
+                var posts = FetchPostsFromVk(ownerId);
                 if (posts != null)
                 {
-                    using (var context = new VkPostContext())
+                    using (var context = new VkDBContext())
                     {
                         foreach (var post in posts)
                         {
-                            //logger.Info("We got something from id" + ownerId + ": " + post.Text);
+                            logger.Info("We got something from id" + ownerId + ": " + post.Text);
                             context.VkPosts.Add(post);
                         }
                         context.SaveChanges();
@@ -75,7 +76,7 @@ namespace vk.Services
         public static VkPost GetRandomPostFromDB()
         {
             //var posts = db.VkPosts.ToList();
-            using (var context = new VkPostContext())
+            using (var context = new VkDBContext())
             {
                 if (context.VkPosts.Any()) // Есть ли одна или более записей
                 {
@@ -86,11 +87,11 @@ namespace vk.Services
                     return null;
             }
         }
-        public static List<VkPost> GetRandomPostsFromDB()
+        public static List<VkPost> GetPostsFromDB()
         {
             //var posts = db.VkPosts.ToList();
             var posts = new List<VkPost>();
-            using (var context = new VkPostContext())
+            using (var context = new VkDBContext())
             {
                 if (context.VkPosts.Any()) // Есть ли одна или более записей
                 {
@@ -98,11 +99,13 @@ namespace vk.Services
                     if (context.VkPosts.Count() < 10)
                         count = context.VkPosts.Count();
 
-                    for (int i = 0; i < count; i++)
-                    {
-                        int randomNumber = random.Next(context.VkPosts.Count()) + 1;
-                        posts.Add(context.VkPosts.Where(p => p.Id == randomNumber).FirstOrDefault());
-                    }
+                    var randomPosts = context.VkPosts.Take(count);
+                    posts = randomPosts.ToList();
+                    var res = context.Database.ExecuteSqlCommand("DELETE TOP (" + count + ") FROM [dbo].[VkPosts]");
+                    
+                    logger.Info(res);
+
+                    //context.SaveChanges();
                 }
             }
             return posts;
@@ -119,9 +122,10 @@ namespace vk.Services
         //
         // Returns last post from given vk.com user (ownerId)
         // 
-        private static List<VkPost> GetPostFromVk(int ownerId)
+        private static List<VkPost> FetchPostsFromVk(int ownerId)
         {
-            var addr = "https://api.vk.com/method/wall.get?owner_id="+ownerId+"&count=10&v=5.28&filter=owner";
+            var count = 1;
+            var addr = "https://api.vk.com/method/wall.get?owner_id="+ownerId+"&count="+count+"&v=5.28&filter=owner";
             var responseJson = JsonToClass._download_serialized_json_data<VkPostJson>(addr);
             
             if (responseJson.response == null)
@@ -139,19 +143,18 @@ namespace vk.Services
                 {
                     if ((postJson.post_source.type.CompareTo("widget") == 0)
                     ||  (postJson.post_source.type.CompareTo("api") == 0)
-                    ) legitPost = false;
+                    ) continue;
                 }
-                // Отсеиваем резальтаты по длинне
-                // и спаму из приложений (ссылки в основном только из них в тексте попадаются)
                 else
-                    if ((postJson.text.Length < 16)                     // Отсеиваем резальтаты по длинне
-                    ||  (postJson.text.Contains("http"))                // и спаму из приложений 
-                    ||  (postJson.text.Contains("vk.com"))              // ручным способом т.к. для 
-                    ||  (postJson.text.Contains("vkontakte.ru"))        // post_source нужна авторизация
-                    ||  (postJson.text.Contains("зайди по ссылке"))
-                    ||  (postJson.text.Contains("фамили"))
-                    ||  (postJson.text.Contains("посещ") && postJson.text.Contains("страницу"))
-                    )   legitPost = false;
+                    if ((postJson.text.Length < 16)                    // Отсеиваем резальтаты по длинне
+                    || (postJson.text.Contains("http"))                // и спаму из приложений 
+                    || (postJson.text.Contains("vk.com"))              // ручным способом т.к. для 
+                    || (postJson.text.Contains("vkontakte.ru"))        // post_source нужна авторизация
+                    || (postJson.text.Contains("зайди по ссылке"))
+                    || (postJson.text.Contains("фамил"))
+                    || (postJson.text.Contains("посещ") && postJson.text.Contains("страницу"))
+                    || (postJson.text.Contains("уров"))
+                    ) continue;
                 //logger.Info(JsonConvert.SerializeObject(postJson));
 
                 if (!legitPost)

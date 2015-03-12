@@ -38,8 +38,11 @@ D:\my projects\cs\vk\vk\bin\ru\System.Web.Razor.resources.dll
 D:\my projects\cs\vk\vk\bin\ru\System.Web.WebPages.resources.dll
 D:\my projects\cs\vk\vk\bin\ru\System.Web.WebPages.Deployment.resources.dll
 D:\my projects\cs\vk\vk\bin\ru\System.Web.WebPages.Razor.resources.dll
-D:\my projects\cs\vk\vk\obj\Debug\vk.csprojResolveAssemblyReference.cache
 D:\my projects\cs\vk\vk\obj\Debug\vk.dll
 D:\my projects\cs\vk\vk\obj\Debug\vk.pdb
 D:\my projects\cs\vk\vk\bin\NLog.dll
 D:\my projects\cs\vk\vk\bin\NLog.xml
+D:\my projects\cs\vk\vk\bin\System.Web.Cors.dll
+D:\my projects\cs\vk\vk\bin\System.Web.Http.Cors.dll
+D:\my projects\cs\vk\vk\bin\System.Web.Http.Cors.xml
+D:\my projects\cs\vk\vk\obj\Debug\vk.csprojResolveAssemblyReference.cache

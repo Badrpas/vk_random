@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using System.Data.Entity;
 
 namespace vk.Models
 {
@@ -17,10 +16,7 @@ namespace vk.Models
         public int Reposts { get; set; }
     }
 
-    public class VkPostContext : DbContext
-    {
-        public DbSet<VkPost> VkPosts { get; set; }
-    }
+
 
 }
 
