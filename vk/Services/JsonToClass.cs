@@ -26,7 +26,7 @@ namespace vk.Services
             // attempt to download JSON data as a string
             try {
                 json_data = Cp1251ToUTF8(w.DownloadString(url));
-                //logger.Info(json_data);
+                //logger.Info("Request response: "+json_data);
             }
             catch (Exception e) {
                 logger.Error(e.Message);
