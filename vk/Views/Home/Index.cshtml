@@ -1,28 +1,61 @@
 ﻿
-
-
-
-
-
 <div class="container-fluid" ng-app="randomMessages" ng-controller="postsController">
+
+
+    <div class="scrollThingWide" ng-click="scrollerClick()"></div>
+    <div class="scrollThing" ng-click="scrollerClick()"></div>
+    
     <div class="row">
-        <h1 class="col-md-12">Random vk posts</h1>
+        <h1 class="col-sm-12 contentTho">Random vk posts</h1>
     </div>
     <div class="row">
-        <div class="col-md-1">
-            <button ng-click="load()" type="button" class="btn btn-info">Refresh</button>
-        </div>
-        <div class="col-md-11">
-            <div class="row" ng-repeat="x in posts">
-                <div class="col-md-1">
-                    <img class="img-responsive img-rounded" src="~/Content/img/placeholder.png">
+
+
+        <div class="col-sm-1" style="z-index: 5;">
+            <div id="sticky">
+                <div>
+                    <button ng-click="load()" type="button" class="btn sharp btn-info" style="z-index:9;">
+                        Load new
+                    </button>
                 </div>
-                <div class="col-md-10">
-                    <span class="editor-label">{{ x.displayName }}</span>
-                    <p>{{ x.Text }}</p>
+                <div>
+                    <button ng-click="clear()" type="button" class="btn sharp" style="z-index:9;">
+                        Clear
+                    </button>
+                </div>
+                @*<div>
+                    <button ng-click="scrollerClick()" class="btn">
+                        <span ng-bind="lastPosition"></span>
+                    </button>
+                </div>*@
+                <span ng-class="loadingGlyphClass" class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
+            </div>
+        </div>
+
+
+        <div class="col-sm-11 col-md-10">
+            <div class="row cmon animate" ng-repeat="post in posts">
+                <hr />
+                <div class="col-sm-1 avatar contentTho">
+                    <a href="https://vk.com/id{{ post.OwnerId }}" target="_blank">
+                        <img class="img-responsive img-rounded" ng-src={{post.avatarURL}}>
+                    </a>
+                </div>
+                <div class="col-sm-10 contentTho">
+                    <a href="https://vk.com/id{{ post.OwnerId }}" target="_blank">
+                        <span class="editor-label" ng-bind="post.displayName"></span>
+                    </a>
+                    <p ng-bind="post.Text"></p>
+                </div>
+                <div style="float:right">
+                    <button ng-click="remove(post)" type="button" class="btn sharp btn-warning">
+                        Remove
+                    </button>
                 </div>
             </div>
         </div>
+
+
     </div>
 </div>
 
@@ -30,5 +63,15 @@
 <!-- 
     <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular.js"></script> 
 -->
-<script src="~/Scripts/vkRandom/angular.js"></script>
+<script src="~/bower/jquery/dist/jquery.min.js"></script>
+<script src="~/bower/jquery-sticky/jquery.sticky.js"></script>
+<script>
+    $(document).ready(function () {
+        $("#sticky").sticky({ topSpacing: 20 });
+    });
+</script>
+<script src="~/bower/angular/angular.js"></script>
+<script src="~/bower/angular-animate/angular-animate.min.js"></script>
+<script src="~/bower/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+<script src="~/bower/angular-scroll/angular-scroll.min.js"></script>
 <script src="~/Scripts/vkRandom/postsController.js"></script>

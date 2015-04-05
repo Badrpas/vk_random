@@ -23,7 +23,6 @@ namespace vk.Controllers
         public IHttpActionResult Post(HttpRequestMessage request)
         {
             var jsonString = request.Content.ReadAsStringAsync().Result;
-            logger.Info("That what we've got: "+jsonString);
             var requestJson = JsonConvert.DeserializeObject<PostRequestJson>(jsonString);
             var ids = requestJson.ids;
             var _ = "";
@@ -42,9 +41,11 @@ namespace vk.Controllers
             }
             var _ids = String.Join(",", ids);
             var addr = "https://api.vk.com/method/users.get?user_ids=" + _ids + "&fields=photo_100&v=5.28";
-            logger.Info("making Vk request: " + addr);
             var responseJson = JsonToClass._download_serialized_json_data<VkUserJson>(addr);
-
+            if (responseJson.response == null)
+            {
+                return Json(0);
+            }
             var userList = new List<VkUser>();
             foreach (var user in responseJson.response)
             {

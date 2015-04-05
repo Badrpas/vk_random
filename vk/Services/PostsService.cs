@@ -53,7 +53,7 @@ namespace vk.Services
             while (Fetching)
             {
                 var ownerId = random.Next(222000000);
-                //logger.Info("Fetching vk post (id"+ownerId+")");
+                
                 var posts = FetchPostsFromVk(ownerId);
                 if (posts != null)
                 {
@@ -61,15 +61,14 @@ namespace vk.Services
                     {
                         foreach (var post in posts)
                         {
-                            logger.Info("We got something from id" + ownerId + ": " + post.Text);
+                            //logger.Info("We got something from id" + ownerId + ": " + post.Text);
                             context.VkPosts.Add(post);
                         }
                         context.SaveChanges();
                     }
                 }
-
                 Thread.Sleep(200);
-            }
+            }            
         }
 
         // Возвращает случайный пост из базы данных

@@ -1,0 +1,147 @@
+﻿
+.avatar {
+    padding-top: 5px;
+    
+}
+
+.contentTho {
+    z-index: 8;
+}
+
+.fixed {
+    position: fixed;
+}
+
+.hidden {
+    display: none;
+}
+
+.loading {
+    animation-name: rotateThis;
+    animation-duration: .5s;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+}
+ 
+@keyframes rotateThis {
+    from { transform: scale( 1 ) rotate( 0deg ); }
+    to { transform: scale( 1 ) rotate( 360deg ); }
+} 
+
+.scrollThing {
+    position: fixed;
+    left: 0;
+    z-index: 6;
+    height: 100vh;
+    width: 18px;
+    background-color: #b9ecff;
+}
+
+.scrollThing:hover,
+.scrollThingWide:hover + .scrollThing{
+    background-color: #2ac4ff;  
+}
+
+.scrollThingWide {
+    position: fixed;
+    left: 0;
+    z-index: 2;
+    height: 100vh;
+    width: 100px;
+    background-color: rgba(185, 236, 255, 0.00);
+}
+
+.scrollThingWide:hover, 
+.scrollThing:hover + .scrollThingWide {
+    background-color: rgba(42, 196, 255, 0.1);
+}
+
+
+.btn.sharp {
+  border-radius:0;
+}
+
+hr {
+    margin-top: 10px;
+    margin-bottom: 0px;
+}
+
+/*.ng-enter{
+    transition-delay: 0.5s;
+    transition: 1.75s;
+    opacity:0;
+}
+
+.ng-enter-active{
+    opacity:1;
+}
+
+ng-enter-stagger{
+}*/
+
+/*.animate.ng-leave{
+    transition: 0.75s;
+    opacity: 1;
+}
+
+.ng-leave-active{
+    opacity: 0;
+}*/
+
+
+.cmon {
+    max-height:500px; 
+    overflow:hidden
+}
+
+.animate.ng-enter,
+.animate.ng-move {
+    -webkit-transition: all 0.8s ease-out ;
+    transition: all 0.8s ease-out ;  
+}
+
+
+.animate.ng-leave{
+    -webkit-transition: all 0.3s ease-out ;
+    -moz-transition: all 0.3s ease-out;
+    -o-transition: all 0.3s ease-out ;
+    transition: all 0.3s ease-out ; 
+}
+
+.animate.ng-enter,
+.animate.ng-move {
+    overflow: hidden;
+    opacity:0;
+    max-height: 0;
+}
+
+.animate.ng-enter-stagger{    
+    -webkit-transition-delay: 0.2s;
+    -moz-transition-delay: 0.2s;
+    -o-transition-delay: 0.2s;
+    transition-delay: 0.2s;
+
+    -webkit-transition-duration: 0s;
+    transition-duration: 0s;
+}
+
+.animate.ng-move.ng-move-active,
+.animate.ng-enter.ng-enter-active {
+    max-height: 500px;
+    opacity:1;
+}
+
+.animate.ng-leave {
+    opacity: 1;
+    overflow: hidden;
+    height: 120px;
+}
+
+.animate.ng-leave.ng-leave-active {
+    opacity: 0;
+    height: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+
